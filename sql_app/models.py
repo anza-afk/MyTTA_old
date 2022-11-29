@@ -46,10 +46,11 @@ class Superuser(Base):
     __tablename__ = "superusers"
 
     id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"), unique=True)
     username = Column(String, index=True)
+    hashed_password = Column(String)
+    is_active = Column(Boolean, default=True)
 
-    troubleticket = relationship("Troubleticket", secondary=superuser_ticket, back_populates="superusers")
+    tickets = relationship("Troubleticket", secondary=superuser_ticket, back_populates="superusers")
 
 
 class Profile(Base):
@@ -61,8 +62,8 @@ class Profile(Base):
     name = Column(String, index=True)
     patronymic = Column(String, index=True)
 
-    department = relationship('Department', secondary=profile_department, back_populates='profiles')
-    user = relationship("User", back_populates="profile")
+    departments = relationship('Department', secondary=profile_department, back_populates='profiles')
+    user_id = relationship("User", back_populates="profile")
 
 
 class Department(Base):
@@ -72,4 +73,4 @@ class Department(Base):
     address = Column(String)
     floor =  Column(Integer)
 
-    department = relationship('Profile', secondary=profile_department, back_populates='departments')
+    profiles = relationship('Profile', secondary=profile_department, back_populates='departments')
