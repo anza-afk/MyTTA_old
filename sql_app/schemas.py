@@ -1,16 +1,16 @@
 from pydantic import BaseModel
 
 
-class TroubleTicketBase(BaseModel):
+class TicketBase(BaseModel):
     title: str
     description: str
     worker_id: int | None = None
     creator_id: int
 
-class TroubleTicketCreate(TroubleTicketBase):
+class TicketCreate(TicketBase):
     pass
 
-class TroubleTicket(TroubleTicketBase):
+class Ticket(TicketBase):
     id: int
 
     class Config:
