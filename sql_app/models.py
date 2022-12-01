@@ -9,7 +9,7 @@ superuser_ticket = Table(
     "superuser_ticket",
     Base.metadata,
     Column("superuser_id", ForeignKey("superusers.id"), primary_key=True),
-    Column("troubleticket_id", ForeignKey("troubletickets.id"), primary_key=True),
+    Column("ticket_id", ForeignKey("tickets.id"), primary_key=True),
 )
 
 profile_department = Table(
@@ -19,15 +19,15 @@ profile_department = Table(
     Column("department_id", ForeignKey("departments.id"), primary_key=True),
 )
 
-class TroubleTicket(Base):
-    __tablename__ = "troubletickets"
+class Ticket(Base):
+    __tablename__ = "tickets"
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
     description = Column(String, index=True)
 
     creator_id = Column(Integer, ForeignKey("users.id"))
-    worker_id = relationship("Superuser", secondary=superuser_ticket, back_populates="troubletickets")
+    worker_id = relationship("Superuser", secondary=superuser_ticket, back_populates="tickets")
 
 
 class User(Base):
@@ -39,7 +39,7 @@ class User(Base):
     is_active = Column(Boolean, default=True)
 
     profile = relationship("Profile", back_populates="user", uselist=False)
-    tickets = relationship("Troubleticket")
+    tickets = relationship("ticket")
 
 
 class Superuser(Base):
@@ -50,7 +50,7 @@ class Superuser(Base):
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
 
-    tickets = relationship("Troubleticket", secondary=superuser_ticket, back_populates="superusers")
+    tickets = relationship("ticket", secondary=superuser_ticket, back_populates="superusers")
 
 
 class Profile(Base):
