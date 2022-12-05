@@ -40,9 +40,24 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
     return db_user
 
 
+@app.post("/users/{user_id}/profile/", response_model=schemas.Profile)
+def create_profile_for_user(
+    user_id: int,
+    profile: schemas.ProfileCreate,
+    db: Session = Depends(get_db)
+    ):
+    return crud.create_profile(
+        db,
+        profile=profile,
+        owner_id=user_id
+        )
+
+
 @app.post("/users/{user_id}/tickets/", response_model=schemas.Ticket)
 def create_ticket_for_user(
-    user_id: int, ticket: schemas.TicketCreate, db: Session = Depends(get_db)
+    user_id: int,
+    ticket: schemas.TicketCreate,
+    db: Session = Depends(get_db)
 ):
     return crud.create_ticket(db=db, ticket=ticket, user_id=user_id)
 
