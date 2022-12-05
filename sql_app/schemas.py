@@ -64,7 +64,7 @@ class DepartmentCreate(DepartmentBase):
 
 class Department(DepartmentBase):
     id: int
-    profiles = list[int] = []
+    profiles: list[int] = []
 
     class Config:
         orm_mode = True
@@ -83,7 +83,7 @@ class ProfileCreate(ProfileBase):
     pass
 
 
-class ProfileTicket(ProfileBase):
+class Profile(ProfileBase):
     id: int
 
     class Config:
