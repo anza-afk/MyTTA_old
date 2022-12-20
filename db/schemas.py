@@ -29,7 +29,7 @@ class User(UserBase):
     id: int
     is_active: bool
     tickets: list[int] = []
-    profile: int
+    profile: int|None
 
     class Config:
         orm_mode = True
