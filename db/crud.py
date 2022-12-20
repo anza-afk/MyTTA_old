@@ -3,13 +3,18 @@ from passlib.context import CryptContext
 
 from . import models, schemas
 
+
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-def verify_password(plain_password, hashed_password):
-    return pwd_context.verify(plain_password, hashed_password)
 
-def get_password_hash(password):
-    return pwd_context.hash(password)
+class Hasher():
+    @staticmethod
+    def verify_password(plain_password, hashed_password):
+        return pwd_context.verify(plain_password, hashed_password)
+    
+    @staticmethod
+    def get_password_hash(password):
+        return pwd_context.hash(password)
 
 
 def get_user(db: Session, user_id: int):
@@ -25,7 +30,7 @@ def get_users(db: Session, skip: int = 0, limit: int = 100):
 
 
 def create_user(db: Session, user: schemas.UserCreate):
-    password_hash = get_password_hash(user.password)
+    password_hash = Hasher.get_password_hash(user.password)
     db_user = models.User(
         email = user.email,
         hashed_password = password_hash
@@ -49,7 +54,7 @@ def get_superusers(db: Session, offset: int = 0, limit: int = 100):
 
 
 def create_superuser(db: Session, superuser: schemas.UserCreate):
-    password_hash = get_password_hash(superuser.password)
+    password_hash = Hasher.get_password_hash(superuser.password)
     db_superuser = models.Superuser(
         email = superuser.email,
         hashed_password = password_hash
