@@ -27,7 +27,7 @@ class Ticket(Base):
     description = Column(String, index=True)
 
     creator_id = Column(Integer, ForeignKey("users.id"))
-    worker_id = relationship("Superuser", secondary=superuser_ticket, back_populates="tickets")
+    superusers = relationship("Superuser", secondary=superuser_ticket, back_populates="tickets")
 
 
 class User(Base):
@@ -37,9 +37,9 @@ class User(Base):
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
-
+    
     profile = relationship("Profile", back_populates="user", uselist=False)
-    tickets = relationship("ticket")
+    tickets = relationship("Ticket")
 
 
 class Superuser(Base):
@@ -50,7 +50,7 @@ class Superuser(Base):
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
 
-    tickets = relationship("ticket", secondary=superuser_ticket, back_populates="superusers")
+    tickets = relationship("Ticket", secondary=superuser_ticket, back_populates="superusers")
 
 
 class Profile(Base):
@@ -63,7 +63,8 @@ class Profile(Base):
     patronymic = Column(String, index=True)
 
     departments = relationship('Department', secondary=profile_department, back_populates='profiles')
-    user_id = relationship("User", back_populates="profile")
+    user = relationship("User", back_populates="profile")
+
 
 
 class Department(Base):
