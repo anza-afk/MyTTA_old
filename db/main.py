@@ -52,7 +52,7 @@ def create_ticket_for_user(
     db: Session = Depends(get_db)
 ):
     return crud.create_ticket(db=db, ticket=ticket, user_id=user_id)
-
+    
 
 @db_router.get("/tickets/", response_model=list[schemas.Ticket])
 def read_tickets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):

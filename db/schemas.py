@@ -1,17 +1,22 @@
+from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel, EmailStr
 
 
 class TicketBase(BaseModel):
     title: str
     description: str
-    worker_id: int | None = None
-    creator_id: int
+    # superuser: int | None = None
+    resolved_at: Optional[datetime]
 
 class TicketCreate(TicketBase):
+    created_at: datetime = datetime.now()
     pass
 
 class Ticket(TicketBase):
     id: int
+    created_at: datetime
+    creator_id: int
 
     class Config:
         orm_mode = True

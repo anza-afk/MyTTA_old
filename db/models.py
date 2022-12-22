@@ -1,5 +1,5 @@
 
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Table
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Table, DateTime
 from sqlalchemy.orm import relationship
 
 from .database import Base
@@ -8,7 +8,11 @@ from .database import Base
 superuser_ticket = Table(
     "superuser_ticket",
     Base.metadata,
-    Column("superuser_id", ForeignKey("superusers.id"), primary_key=True),
+    Column(
+        "superuser_id",
+        ForeignKey("superusers.id"),
+        primary_key=True,
+        nullable=True),
     Column("ticket_id", ForeignKey("tickets.id"), primary_key=True),
 )
 
@@ -25,9 +29,10 @@ class Ticket(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String, index=True)
     description = Column(String, index=True)
-
+    created_at = Column(DateTime)
+    resolved_at = Column(DateTime, nullable=True)
     creator_id = Column(Integer, ForeignKey("users.id"))
-    superusers = relationship("Superuser", secondary=superuser_ticket, back_populates="tickets")
+    superuser = relationship("Superuser", secondary=superuser_ticket, back_populates="tickets")
 
 
 class User(Base):
@@ -39,7 +44,7 @@ class User(Base):
     is_active = Column(Boolean, default=True)
     
     profile = relationship("Profile", back_populates="user", uselist=False)
-    tickets = relationship("Ticket")
+    tickets = relationship("Ticket", backref='user')
 
 
 class Superuser(Base):
@@ -50,7 +55,7 @@ class Superuser(Base):
     hashed_password = Column(String)
     is_active = Column(Boolean, default=True)
 
-    tickets = relationship("Ticket", secondary=superuser_ticket, back_populates="superusers")
+    tickets = relationship("Ticket", secondary=superuser_ticket, back_populates="superuser")
 
 
 class Profile(Base):
