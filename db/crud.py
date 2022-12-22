@@ -74,10 +74,11 @@ def get_tickets(db:Session, offset: int = 0, limit: int = 100):
 
 
 def create_ticket(db:Session, ticket: schemas.TicketCreate, user_id: int):
+    user_id = 0
     db_ticket = models.Ticket(
         **ticket.dict(),
-        creator_id = user_id
-    )
+        creator_id=user_id
+        )
     db.add(db_ticket)
     db.commit()
     db.refresh(db_ticket)
