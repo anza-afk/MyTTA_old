@@ -6,7 +6,6 @@ from pydantic import BaseModel, EmailStr
 class TicketBase(BaseModel):
     title: str
     description: str
-    # superuser: int | None = None
     resolved_at: Optional[datetime]
 
 class TicketCreate(TicketBase):
@@ -17,7 +16,8 @@ class Ticket(TicketBase):
     id: int
     created_at: datetime
     creator_id: int
-
+    superuser: list[int] | None = None
+    
     class Config:
         orm_mode = True
 
