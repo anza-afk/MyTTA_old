@@ -1,5 +1,5 @@
 from typing import Generator
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from . import crud, models, schemas
@@ -58,3 +58,14 @@ def create_ticket_for_user(
 def read_tickets(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     tickets = crud.get_tickets(db, skip=skip, limit=limit)
     return tickets
+
+
+@db_router.get("/tickets/{ticket_id}/", response_model=schemas.Ticket)
+def get_ticket(ticket_id:int, db: Session = Depends(get_db)):
+    ticket = crud.get_ticket(db, ticket_id)
+    if not ticket:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f'Ticket with id {ticket_id} does not exist'
+            )
+    return ticket
